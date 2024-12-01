@@ -1,0 +1,21 @@
+#include <stdio.h>
+
+void printSpotifyLogo() {
+    printf("       *****          *****          *****\n");
+    printf("    ***     ***    ***     ***    ***     ***\n");
+    printf("   **         **  **         **  **         **\n");
+    printf("  *             **             **             *\n");
+    printf(" **                                                **\n");
+    printf("**             SPOTIFY LOGO (ASCII)               **\n");
+    printf(" **                                                **\n");
+    printf("  *             **             **             *\n");
+    printf("   **         **  **         **  **         **\n");
+    printf("    ***     ***    ***     ***    ***     ***\n");
+    printf("       *****          *****          *****\n");
+}
+
+int main() {
+    printSpotifyLogo();
+    return 0;
+}
+
