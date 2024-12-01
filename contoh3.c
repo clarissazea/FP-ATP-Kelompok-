@@ -18,7 +18,7 @@ typedef struct Playlist {
 
 // Function prototypes
 void printSpotifyLogo();
-void printSpotifyBanner();
+void printASCIIArt();
 void printWelcomeMessage();
 Song* create_song(const char* singer, const char* title);
 Playlist* create_playlist(const char* name);
@@ -39,17 +39,15 @@ void printSpotifyLogo() {
     printf("   OOO      \n");
 }
 
-// Function to print Spotify banner
-void printSpotifyBanner() {
-    printf("   _____             _   _  __         \n");
-    printf("  / ____|           | | (_)/ _|        \n");
-    printf(" | (___   ___   ___ | |_ _| |_ _   _   \n");
-    printf("  \\___ \\ / _ \\ / _ \\| __| |  _| | | |  \n");
-    printf("  ____) | (_) | (_) | |_| | | | |_| |  \n");
-    printf(" |_____/ \\___/ \\___/ \\__|_|_|  \\__, |  \n");
-    printf("                               __/ |  \n");
-    printf("                              |___/   \n");
-    printf("\n");
+void printASCIIArt() {
+    printf(" .d8888b.  8888888b.   .d88888b. 88888888888 8888888 8888888888 Y88b   d88P \n");
+    printf("d88P  Y88b 888   Y88b d88P\" \"Y88b    888       888   888         Y88b d88P  \n");
+    printf("Y88b.      888    888 888     888    888       888   888          Y88o88P   \n");
+    printf(" \"Y888b.   888   d88P 888     888    888       888   8888888       Y888P    \n");
+    printf("    \"Y88b. 8888888P\"  888     888    888       888   888            888     \n");
+    printf("      \"888 888        888     888    888       888   888            888     \n");
+    printf("Y88b  d88P 888        Y88b. .d88P    888       888   888            888     \n");
+    printf(" \"Y8888P\"  888         \"Y88888P\"     888     8888888 888            888     \n");
 }
 
 // Function to print welcome message
@@ -117,7 +115,6 @@ void remove_song(Playlist* playlist, const char* title) {
     }
 }
 
-// Function to display all songs in a playlist
 void display_playlist(Playlist* playlist) {
     if (!playlist->head) {
         printf("Playlist '%s' is empty!\n", playlist->name);
@@ -125,9 +122,11 @@ void display_playlist(Playlist* playlist) {
     }
     printf("Songs in playlist '%s':\n", playlist->name);
     Song* temp = playlist->head;
+    int i=1;
     while (temp) {
-        printf("%s - %s\n", temp->singer, temp->title); // Ubah format output di sini
+        printf("%d. %s - %s\n",i, temp->title, temp->singer); // Ubah format output di sini
         temp = temp->next;
+        i++;
     }
 }
 
@@ -172,7 +171,7 @@ int main() {
 
     // Print the Spotify intro
     printSpotifyLogo();
-    printSpotifyBanner();
+    printASCIIArt();
     printWelcomeMessage();
 
     do {
@@ -201,7 +200,7 @@ int main() {
                     printf("Enter Singer: ");
                     scanf(" %[^\n]s", singer);
                     printf("Enter Title: ");
-                    scanf(" %[^\n]s", title);1
+                    scanf(" %[^\n]s", title);
                     add_song(playlist, singer, title);
                 } else {
                     printf("Playlist '%s' not found.\n", playlist_name);
@@ -234,6 +233,7 @@ int main() {
                 break;
             case 6:
                 printf("Exiting...\n");
+
                 break;
             default:
                 printf("Invalid choice! Try again.\n");
