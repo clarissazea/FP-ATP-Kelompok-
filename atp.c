@@ -1,5 +1,8 @@
 // yudi
 // adsjnakdnakdnakdgi
+<<<<<<< HEAD
+// mainnadia 
+=======
 //hai ini dinaraa
 
 
