@@ -1,1 +1,162 @@
-// tau ga ada orang cakep bgt?
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Define the structure for a song
+typedef struct Song {
+    char singer[100];
+    char title[100];
+    struct Song* next;
+} Song;
+
+// Function to create a new song node
+Song* create_song(const char* singer, const char* title) {
+    Song* new_song = (Song*)malloc(sizeof(Song));
+    strcpy(new_song->singer, singer);
+    strcpy(new_song->title, title);
+    new_song->next = NULL;
+    return new_song;
+}
+
+// Function to add a song to the playlist
+Song* add_song(Song* head, const char* singer, const char* title) {
+    Song* new_song = create_song(singer, title);
+    if (!head) return new_song; // If the playlist is empty
+    Song* temp = head;
+    while (temp->next) temp = temp->next;
+    temp->next = new_song;
+    return head;
+}
+
+// Function to remove a song from the playlist
+Song* remove_song(Song* head, const char* title) {
+    if (!head) {
+        printf("Playlist is empty!\n");
+        return head;
+    }
+    if (strcmp(head->title, title) == 0) {
+        Song* temp = head;
+        head = head->next;
+        free(temp);
+        return head;
+    }
+    Song* temp = head;
+    while (temp->next && strcmp(temp->next->title, title) != 0)
+        temp = temp->next;
+    if (temp->next) {
+        Song* to_delete = temp->next;
+        temp->next = temp->next->next;
+        free(to_delete);
+    } else {
+        printf("Song not found!\n");
+    }
+    return head;
+}
+
+// Function to display the playlist
+void display_playlist(Song* head) {
+    if (!head) {
+        printf("Playlist is empty!\n");
+        return;
+    }
+    Song* temp = head;
+    printf("Your Playlist:\n");
+    while (temp) {
+        printf("Singer: %s, Title: %s\n", temp->singer, temp->title);
+        temp = temp->next;
+    }
+}
+
+// Function to save the playlist to a file
+void save_playlist(Song* head, const char* filename) {
+    FILE* file = fopen(filename, "w");
+    if (!file) {
+        printf("Error opening file for writing!\n");
+        return;
+    }
+    Song* temp = head;
+    while (temp) {
+        fprintf(file, "Singer: %s, Title: %s\n", temp->singer, temp->title);
+        temp = temp->next;
+    }
+    fclose(file);
+    printf("Playlist saved to %s\n", filename);
+}
+
+// Function to sort the playlist by title
+Song* sort_playlist(Song* head) {
+    if (!head || !head->next) return head;
+    for (Song* i = head; i->next; i = i->next) {
+        for (Song* j = head; j->next; j = j->next) {
+            if (strcmp(j->title, j->next->title) > 0) {
+                char temp_singer[100], temp_title[100];
+                strcpy(temp_singer, j->singer);
+                strcpy(temp_title, j->title);
+                strcpy(j->singer, j->next->singer);
+                strcpy(j->title, j->next->title);
+                strcpy(j->next->singer, temp_singer);
+                strcpy(j->next->title, temp_title);
+            }
+        }
+    }
+    return head;
+}
+
+int main() {
+    Song* playlist = NULL;
+    int choice;
+    char singer[100], title[100];
+    char filename[100];
+
+    do {
+        printf("\nMenu:\n");
+        printf("1. Add Song\n");
+        printf("2. Remove Song\n");
+        printf("3. Display Playlist\n");
+        printf("4. Save Playlist to File\n");
+        printf("5. Sort Playlist by Title\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter Singer: ");
+                scanf(" %[^\n]s", singer);
+                printf("Enter Title: ");
+                scanf(" %[^\n]s", title);
+                playlist = add_song(playlist, singer, title);
+                break;
+            case 2:
+                printf("Enter Title of the song to remove: ");
+                scanf(" %[^\n]s", title);
+                playlist = remove_song(playlist, title);
+                break;
+            case 3:
+                display_playlist(playlist);
+                break;
+            case 4:
+                printf("Enter filename to save the playlist: ");
+                scanf(" %[^\n]s", filename);
+                save_playlist(playlist, filename);
+                break;
+            case 5:
+                playlist = sort_playlist(playlist);
+                printf("Playlist sorted by title.\n");
+                break;
+            case 6:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+    } while (choice != 6);
+
+    // Free memory
+    while (playlist) {
+        Song* temp = playlist;
+        playlist = playlist->next;
+        free(temp);
+    }
+    return 0;
+}
