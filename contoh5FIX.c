@@ -107,7 +107,7 @@ void add_song(Playlist* playlist, const char* singer, const char* title) {
 // Function to remove a song from a playlist
 void remove_song(Playlist* playlist, const char* title) {
     if (!playlist->head) {
-        printf("Playlist '%s' is empty!\n", playlist->name);
+        printf("Playlist '%s' is empty!\n", playlist-1>name);
         return;
     }
     if (strcmp(playlist->head->title, title) == 0) {
