@@ -58,6 +58,15 @@ void printWelcomeMessage() {
     printf("Explore millions of songs, playlists, and more.\n\n");
 }
 
+// Function to create a new playlist
+Playlist* create_playlist(const char* name) {
+    Playlist* new_playlist = (Playlist*)malloc(sizeof(Playlist));
+    strcpy(new_playlist->name, name);
+    new_playlist->head = NULL;
+    new_playlist->next = NULL;
+    return new_playlist;
+}
+
 // Function to create a new song node
 Song* create_song(const char* singer, const char* title) {
     Song* new_song = (Song*)malloc(sizeof(Song));
@@ -67,14 +76,7 @@ Song* create_song(const char* singer, const char* title) {
     return new_song;
 }
 
-// Function to create a new playlist
-Playlist* create_playlist(const char* name) {
-    Playlist* new_playlist = (Playlist*)malloc(sizeof(Playlist));
-    strcpy(new_playlist->name, name);
-    new_playlist->head = NULL;
-    new_playlist->next = NULL;
-    return new_playlist;
-}
+
 
 // Function to add a song to a playlist
 void add_song(Playlist* playlist, const char* singer, const char* title) {
@@ -230,7 +232,7 @@ int main() {
             default:
                 printf("Invalid choice! Try again.\n");
         }
-    } while (choice != 4);g
+    } while (choice != 4);
 
     return 0;
 }
