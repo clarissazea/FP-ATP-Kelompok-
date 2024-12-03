@@ -17,7 +17,7 @@ typedef struct Playlist {
 } Playlist;
 
 // Function prototypes
-void printSpotifyLogo();
+void printASCIIArt();
 void printWelcomeMessage();
 Song* create_song(const char* singer, const char* title);
 Playlist* create_playlist(const char* name);
@@ -27,19 +27,8 @@ void display_playlist(Playlist* playlist);
 Playlist* find_playlist(Playlist* head, const char* name);
 Playlist* add_playlist(Playlist* head, const char* name);
 void display_all_playlists(Playlist* head);
-void free_playlists(Playlist* head);
 
-// Menu function prototypes
-void manage_playlist_menu(Playlist* playlist);
-void main_menu(Playlist** playlists);
-
-// Function to print Spotify logo
-
-
-  void printSpotifyLogo() {
-    const char* GREEN = "\033[0;32m"; // Warna teks hijau
-    const char* RESET = "\033[0m";    // Reset warna teks
-
+void printASCIIArt() {
     const char* ascii_art =
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n"
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n"
@@ -62,7 +51,7 @@ void main_menu(Playlist** playlists);
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n"
         "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
 
-    printf("%s%s%s\n", GREEN, ascii_art, RESET);
+    printf("%s%s%s\n", "\033[1;32m", ascii_art, "\033[0m");  // Color the ASCII art with green
 }
 
 // Function to print welcome message
@@ -107,7 +96,7 @@ void add_song(Playlist* playlist, const char* singer, const char* title) {
 // Function to remove a song from a playlist
 void remove_song(Playlist* playlist, const char* title) {
     if (!playlist->head) {
-        printf("Playlist '%s' is empty!\n", playlist-1>name);
+        printf("Playlist '%s' is empty!\n", playlist->name);
         return;
     }
     if (strcmp(playlist->head->title, title) == 0) {
@@ -139,7 +128,7 @@ void display_playlist(Playlist* playlist) {
     Song* temp = playlist->head;
     int i = 1;
     while (temp) {
-        printf("%d. %s - %s\n", i, temp->title, temp->singer);
+        printf("%d. %s - %s\n", i, temp->title, temp->singer); // Ubah format output di sini
         temp = temp->next;
         i++;
     }
@@ -175,119 +164,83 @@ void display_all_playlists(Playlist* head) {
     }
 }
 
-// Function to free memory
-void free_playlists(Playlist* head) {
-    while (head) {
-        Playlist* temp_playlist = head;
-        head = head->next;
-
-        Song* song = temp_playlist->head;
-        while (song) {
-            Song* temp_song = song;
-            song = song->next;
-            free(temp_song);
-        }
-        free(temp_playlist);
-    }
-}
-
-// Submenu for managing a playlist
-void manage_playlist_menu(Playlist* playlist) {
-    int choice;
-    char singer[100], title[100];
-
-    do {
-        printf("\nManage Playlist: '%s'\n", playlist->name);
-        printf("1. Add Song\n");
-        printf("2. Remove Song\n");
-        printf("3. Display Songs\n");
-        printf("4. Back to Main Menu\n");
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
-
-        switch (choice) {
-            case 1:
-                printf("Enter Singer: ");
-                scanf(" %[^\n]s", singer);
-                printf("Enter Title: ");
-                scanf(" %[^\n]s", title);
-                add_song(playlist, singer, title);
-                break;
-            case 2:
-                printf("Enter Title of the song to remove: ");
-                scanf(" %[^\n]s", title);
-                remove_song(playlist, title);
-                break;
-            case 3:
-                display_playlist(playlist);
-                break;
-            case 4:
-                printf("Returning to Main Menu...\n");
-                break;
-            default:
-                printf("Invalid choice! Try again.\n");
-        }
-    } while (choice != 4);
-}
-
-// Main menu function
-void main_menu(Playlist** playlists) {
-    int choice;
-    char playlist_name[100];
-
-    do {
-        printf("\nMenu:\n");
-        printf("1. Add Playlist\n");
-        printf("2. Manage Playlist\n");
-        printf("3. Display All Playlists\n");
-        printf("4. Exit\n");
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
-
-        switch (choice) {
-            case 1:
-                printf("Enter playlist name: ");
-                scanf(" %[^\n]s", playlist_name);
-                *playlists = add_playlist(*playlists, playlist_name);
-                printf("Playlist '%s' created.\n", playlist_name);
-                break;
-            case 2:
-                printf("Enter playlist name: ");
-                scanf(" %[^\n]s", playlist_name);
-                Playlist* playlist = find_playlist(*playlists, playlist_name);
-                if (playlist) {
-                    manage_playlist_menu(playlist);
-                } else {
-                    printf("Playlist '%s' not found.\n", playlist_name);
-                }
-                break;
-            case 3:
-                display_all_playlists(*playlists);
-                break;
-            case 4:
-                printf("Exiting...\n");
-                free_playlists(*playlists);
-                *playlists = NULL;
-                break;
-            default:
-                printf("Invalid choice! Try again.\n");
-        }
-    } while (choice != 4);
-}
-
 // Main function
 int main() {
     Playlist* playlists = NULL;
+    int choice;
+    char playlist_name[100], singer[100], title[100];
 
     // Clear the screen (for Unix/Linux/MacOS)
     printf("\033[2J\033[1;1H");
 
     // Print the Spotify intro
-    printSpotifyLogo();
+    printASCIIArt();
     printWelcomeMessage();
 
-    // Display the main menu
-    main_menu(&playlists);
+    do {
+        printf("\nMenu:\n");
+        printf("1. Add Playlist\n");
+        printf("2. Add Song to Playlist\n");
+        printf("3. Remove Song from Playlist\n");
+        printf("4. Display Songs in Playlist\n");
+        printf("5. Display All Playlists\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter playlist name: ");
+                scanf(" %[^\n]s", playlist_name);
+                playlists = add_playlist(playlists, playlist_name);
+                printf("Playlist '%s' created.\n", playlist_name);
+                break;
+            case 2:
+                printf("Enter playlist name: ");
+                scanf(" %[^\n]s", playlist_name);
+                Playlist* playlist = find_playlist(playlists, playlist_name);
+                if (playlist) {
+                    printf("Enter Singer: ");
+                    scanf(" %[^\n]s", singer);
+                    printf("Enter Title: ");
+                    scanf(" %[^\n]s", title);
+                    add_song(playlist, singer, title);
+                } else {
+                    printf("Playlist '%s' not found.\n", playlist_name);
+                }
+                break;
+            case 3:
+                printf("Enter playlist name: ");
+                scanf(" %[^\n]s", playlist_name);
+                playlist = find_playlist(playlists, playlist_name);
+                if (playlist) {
+                    printf("Enter Title of the song to remove: ");
+                    scanf(" %[^\n]s", title);
+                    remove_song(playlist, title);
+                } else {
+                    printf("Playlist '%s' not found.\n", playlist_name);
+                }
+                break;
+            case 4:
+                printf("Enter playlist name: ");
+                scanf(" %[^\n]s", playlist_name);
+                playlist = find_playlist(playlists, playlist_name);
+                if (playlist) {
+                    display_playlist(playlist);
+                } else {
+                    printf("Playlist '%s' not found.\n", playlist_name);
+                }
+                break;
+            case 5:
+                display_all_playlists(playlists);
+                break;
+            case 6:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice! Try again.\n");
+        }
+    } while (choice != 6);
 
     return 0;
 }
