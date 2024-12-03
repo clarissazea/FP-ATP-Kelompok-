@@ -1,0 +1,20 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/dina-r/FP-ATP-Kelompok-/contoh5FIX'
+relocations:
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _printSpotifyLogo, symObjAddr: 0x0, symBinAddr: 0x1000027CC, symSize: 0x64 }
+  - { offsetInCU: 0xD1, offset: 0xD1, size: 0x8, addend: 0x0, symName: _printSpotifyLogo, symObjAddr: 0x0, symBinAddr: 0x1000027CC, symSize: 0x64 }
+  - { offsetInCU: 0x111, offset: 0x111, size: 0x8, addend: 0x0, symName: _printWelcomeMessage, symObjAddr: 0x64, symBinAddr: 0x100002830, symSize: 0x48 }
+  - { offsetInCU: 0x126, offset: 0x126, size: 0x8, addend: 0x0, symName: _create_song, symObjAddr: 0xAC, symBinAddr: 0x100002878, symSize: 0x60 }
+  - { offsetInCU: 0x16A, offset: 0x16A, size: 0x8, addend: 0x0, symName: _create_playlist, symObjAddr: 0x10C, symBinAddr: 0x1000028D8, symSize: 0x4C }
+  - { offsetInCU: 0x1A0, offset: 0x1A0, size: 0x8, addend: 0x0, symName: _add_song, symObjAddr: 0x158, symBinAddr: 0x100002924, symSize: 0xBC }
+  - { offsetInCU: 0x20A, offset: 0x20A, size: 0x8, addend: 0x0, symName: _remove_song, symObjAddr: 0x214, symBinAddr: 0x1000029E0, symSize: 0x1A4 }
+  - { offsetInCU: 0x282, offset: 0x282, size: 0x8, addend: 0x0, symName: _display_playlist, symObjAddr: 0x3B8, symBinAddr: 0x100002B84, symSize: 0xE0 }
+  - { offsetInCU: 0x2C2, offset: 0x2C2, size: 0x8, addend: 0x0, symName: _find_playlist, symObjAddr: 0x498, symBinAddr: 0x100002C64, symSize: 0x7C }
+  - { offsetInCU: 0x2F8, offset: 0x2F8, size: 0x8, addend: 0x0, symName: _add_playlist, symObjAddr: 0x514, symBinAddr: 0x100002CE0, symSize: 0x9C }
+  - { offsetInCU: 0x34A, offset: 0x34A, size: 0x8, addend: 0x0, symName: _display_all_playlists, symObjAddr: 0x5B0, symBinAddr: 0x100002D7C, symSize: 0x8C }
+  - { offsetInCU: 0x36E, offset: 0x36E, size: 0x8, addend: 0x0, symName: _free_playlists, symObjAddr: 0x63C, symBinAddr: 0x100002E08, symSize: 0x98 }
+  - { offsetInCU: 0x3D8, offset: 0x3D8, size: 0x8, addend: 0x0, symName: _manage_playlist_menu, symObjAddr: 0x6D4, symBinAddr: 0x100002EA0, symSize: 0x1DC }
+  - { offsetInCU: 0x428, offset: 0x428, size: 0x8, addend: 0x0, symName: _main_menu, symObjAddr: 0x8C0, symBinAddr: 0x10000308C, symSize: 0x21C }
+  - { offsetInCU: 0x486, offset: 0x486, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0xAEC, symBinAddr: 0x1000032B8, symSize: 0x50 }
+...
