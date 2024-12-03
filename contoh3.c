@@ -55,7 +55,7 @@ printf("%s%s%s\n", GREEN, ascii_art, RESET);
 // Function to print welcome message
 void printWelcomeMessage() {
     printf("=========================================\n");
-    printf("  Welcome to Spotify - Feel the Music!   \n");
+    printf("  Welcome to Spotify - Music for Everyone!   \n");
     printf("=========================================\n");
     printf("Explore millions of songs, playlists, and more.\n\n");
 }
@@ -122,7 +122,7 @@ void display_playlist(Playlist* playlist) {
         printf("Playlist '%s' is empty!\n", playlist->name);
         return;
     }
-    printf("Songs in playlist '%s':\n", playlist->name);
+    printf("\nSongs in playlist '%s':\n", playlist->name);
     Song* temp = playlist->head;
     int i=1;
     while (temp) {
@@ -176,7 +176,7 @@ int main() {
     printWelcomeMessage();
 
     do {
-        printf("\nMenu:\n");
+        printf("\n=====Menu=====\n");
         printf("1. Add Playlist\n");
         printf("2. Add Song to Playlist\n");
         printf("3. Remove Song from Playlist\n");
@@ -192,21 +192,39 @@ int main() {
                 scanf(" %[^\n]s", playlist_name);
                 playlists = add_playlist(playlists, playlist_name);
                 printf("Playlist '%s' created.\n", playlist_name);
+                printf("\n1. Back to menu:\n");
+                printf("2. Exit\n");
+                printf("Enter your choice:");
+                if(getchar()== '1') {
+                    break;
+                }else if (getchar()== '2') {
+                    return 0;
+                }
                 break;
+
             case 2:
                 printf("Enter playlist name: ");
                 scanf(" %[^\n]s", playlist_name);
                 Playlist* playlist = find_playlist(playlists, playlist_name);
                 if (playlist) {
-                    printf("Enter Singer: ");
-                    scanf(" %[^\n]s", singer);
                     printf("Enter Title: ");
                     scanf(" %[^\n]s", title);
+                    printf("Enter Singer: ");
+                    scanf(" %[^\n]s", singer);
                     add_song(playlist, singer, title);
                 } else {
                     printf("Playlist '%s' not found.\n", playlist_name);
                 }
+                printf("\n1. Back to menu:\n");
+                printf("2. Exit\n");
+                printf("Enter your choice:");
+                if(getchar()== '1') {
+                    break;
+                }else if (getchar()== '2') {
+                    return 0;
+                }
                 break;
+
             case 3:
                 printf("Enter playlist name: ");
                 scanf(" %[^\n]s", playlist_name);
@@ -218,7 +236,16 @@ int main() {
                 } else {
                     printf("Playlist '%s' not found.\n", playlist_name);
                 }
+                printf("\n1. Back to menu:\n");
+                printf("2. Exit\n");
+                printf("Enter your choice:");
+                if(getchar()== '1') {
+                    break;
+                }else if (getchar()== '2') {
+                    return 0;
+                }
                 break;
+
             case 4:
                 printf("Enter playlist name: ");
                 scanf(" %[^\n]s", playlist_name);
@@ -228,13 +255,30 @@ int main() {
                 } else {
                     printf("Playlist '%s' not found.\n", playlist_name);
                 }
+                printf("\n1. Back to menu:\n");
+                printf("2. Exit\n");
+                printf("Enter your choice:");
+                if(getchar()== '1') {
+                    break;
+                }else if (getchar()== '2') {
+                    return 0;
+                }
                 break;
+
             case 5:
                 display_all_playlists(playlists);
+                printf("\n1. Back to menu:\n");
+                printf("2. Exit\n");
+                printf("Enter your choice:");
+                if(getchar()== '1') {
+                    break;
+                }else if (getchar()== '2') {
+                    return 0;
+                }
                 break;
+
             case 6:
                 printf("Exiting...\n");
-
                 break;
             default:
                 printf("Invalid choice! Try again.\n");
