@@ -27,16 +27,29 @@ void display_playlist(Playlist* playlist);
 Playlist* find_playlist(Playlist* head, const char* name);
 Playlist* add_playlist(Playlist* head, const char* name);
 void display_all_playlists(Playlist* head);
+void free_songs(Song* head);
+void free_playlists(Playlist* head);
 
 void printASCIIArt() {
-    printf(" .d8888b.  8888888b.   .d88888b. 88888888888 8888888 8888888888 Y88b   d88P \n");
-    printf("d88P  Y88b 888   Y88b d88P\" \"Y88b    888       888   888         Y88b d88P  \n");
-    printf("Y88b.      888    888 888     888    888       888   888          Y88o88P   \n");
-    printf(" \"Y888b.   888   d88P 888     888    888       888   8888888       Y888P    \n");
-    printf("    \"Y88b. 8888888P\"  888     888    888       888   888            888     \n");
-    printf("      \"888 888        888     888    888       888   888            888     \n");
-    printf("Y88b  d88P 888        Y88b. .d88P    888       888   888            888     \n");
-    printf(" \"Y8888P\"  888         \"Y88888P\"     888     8888888 888            888     \n");
+    printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@@@@@            @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@@@                 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@                    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@    @@@@@@@@@@@       @@@@@@@@     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@  @@@   @@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@   @@@@@@@@@@@@@@@@@@   @@@@@@  @@   @@@@@@@@@@@@@@@@@@@@@@  @@@@@@@@  @@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@                  @@@    @@@@@  @@@@@@@       @@@@      @@@     @  @       @@@@  @@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@    @@@@@@@@@@@@@@       @@@@@      @@@  @@@@   @  @@@@   @  @@@@  @@  @@@  @@@ @@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@                @@@@     @@@@@@@@@@   @  @@@@@  @  @@@@@  @  @@@@  @@  @@@@ @@  @@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@     @@@@@@@@@@@        @@@@@@ @@@@@  @   @@@  @@   @@@  @@   @@@  @@  @@@@    @@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@              @@@      @@@@@@@     @@@  @    @@@@@     @@@@    @  @@  @@@@@  @@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@                    @@@@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   @@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@@                  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@@@@@             @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
 }
 
 // Function to print welcome message
@@ -104,6 +117,7 @@ void remove_song(Playlist* playlist, const char* title) {
     }
 }
 
+// Function to display songs in a playlist
 void display_playlist(Playlist* playlist) {
     if (!playlist->head) {
         printf("Playlist '%s' is empty!\n", playlist->name);
@@ -111,11 +125,10 @@ void display_playlist(Playlist* playlist) {
     }
     printf("Songs in playlist '%s':\n", playlist->name);
     Song* temp = playlist->head;
-    int i=1;
+    int i = 1;
     while (temp) {
-        printf("%d. %s - %s\n",i, temp->title, temp->singer); // Ubah format output di sini
+        printf("%d. %s - %s\n", i++, temp->title, temp->singer);
         temp = temp->next;
-        i++;
     }
 }
 
@@ -149,14 +162,37 @@ void display_all_playlists(Playlist* head) {
     }
 }
 
+// Function to free all songs in a playlist
+void free_songs(Song* head) {
+    while (head) {
+        Song* temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
+
+// Function to free all playlists
+void free_playlists(Playlist* head) {
+    while (head) {
+        Playlist* temp = head;
+        free_songs(head->head);
+        head = head->next;
+        free(temp);
+    }
+}
+
 // Main function
 int main() {
     Playlist* playlists = NULL;
     int choice;
     char playlist_name[100], singer[100], title[100];
 
-    // Clear the screen (for Unix/Linux/MacOS)
+    // Clear the screen (cross-platform)
+#ifdef _WIN32
+    system("cls");
+#else
     printf("\033[2J\033[1;1H");
+#endif
 
     // Print the Spotify intro
     printASCIIArt();
@@ -176,52 +212,55 @@ int main() {
         switch (choice) {
             case 1:
                 printf("Enter playlist name: ");
-                scanf(" %[^\n]s", playlist_name);
+                scanf(" %99[^\n]", playlist_name);
                 playlists = add_playlist(playlists, playlist_name);
                 printf("Playlist '%s' created.\n", playlist_name);
                 break;
-            case 2:
+            case 2: {
                 printf("Enter playlist name: ");
-                scanf(" %[^\n]s", playlist_name);
+                scanf(" %99[^\n]", playlist_name);
                 Playlist* playlist = find_playlist(playlists, playlist_name);
                 if (playlist) {
                     printf("Enter Singer: ");
-                    scanf(" %[^\n]s", singer);
+                    scanf(" %99[^\n]", singer);
                     printf("Enter Title: ");
-                    scanf(" %[^\n]s", title);
+                    scanf(" %99[^\n]", title);
                     add_song(playlist, singer, title);
                 } else {
                     printf("Playlist '%s' not found.\n", playlist_name);
                 }
                 break;
-            case 3:
+            }
+            case 3: {
                 printf("Enter playlist name: ");
-                scanf(" %[^\n]s", playlist_name);
-                playlist = find_playlist(playlists, playlist_name);
+                scanf(" %99[^\n]", playlist_name);
+                Playlist* playlist = find_playlist(playlists, playlist_name);
                 if (playlist) {
                     printf("Enter Title of the song to remove: ");
-                    scanf(" %[^\n]s", title);
+                    scanf(" %99[^\n]", title);
                     remove_song(playlist, title);
                 } else {
                     printf("Playlist '%s' not found.\n", playlist_name);
                 }
                 break;
-            case 4:
+            }
+            case 4: {
                 printf("Enter playlist name: ");
-                scanf(" %[^\n]s", playlist_name);
-                playlist = find_playlist(playlists, playlist_name);
+                scanf(" %99[^\n]", playlist_name);
+                Playlist* playlist = find_playlist(playlists, playlist_name);
                 if (playlist) {
                     display_playlist(playlist);
                 } else {
                     printf("Playlist '%s' not found.\n", playlist_name);
                 }
                 break;
+            }
             case 5:
                 display_all_playlists(playlists);
                 break;
             case 6:
                 printf("Exiting...\n");
-
+                free_playlists(playlists);
                 break;
             default:
                 printf("Invalid choice! Try again.\n");
