@@ -2,21 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Define the structure for a song
+// Mendefisinikan struktur untuk lagu 
 typedef struct Song {
     char singer[100];
     char title[100];
     struct Song* next;
 } Song;
 
-// Define the structure for a playlist
+// Mendefinisikan struktur untuk playlist
 typedef struct Playlist {
     char name[100];
     Song* head;
     struct Playlist* next;
 } Playlist;
 
-// Function prototypes
+// Mendefinisikan fungsi untuk dipanggil
 void printASCIIArt();
 void printWelcomeMessage();
 Song* create_song(const char* singer, const char* title);
@@ -50,15 +50,14 @@ void printASCIIArt() {
     printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
 }
 
-// Function to print welcome message
+// Menampilkan welcome message
 void printWelcomeMessage() {
     printf("=========================================\n");
     printf("  Welcome to Spotify - Feel the Music!   \n");
     printf("=========================================\n");
     printf("Explore millions of songs, playlists, and more.\n\n");
 }
-
-// Function to create a new playlist
+// Membuat playlist baru
 Playlist* create_playlist(const char* name) {
     Playlist* new_playlist = (Playlist*)malloc(sizeof(Playlist));
     strcpy(new_playlist->name, name);
@@ -67,7 +66,7 @@ Playlist* create_playlist(const char* name) {
     return new_playlist;
 }
 
-// Function to create a new song node
+// Membuat node lagu baru 
 Song* create_song(const char* singer, const char* title) {
     Song* new_song = (Song*)malloc(sizeof(Song));
     strcpy(new_song->singer, singer);
@@ -76,9 +75,7 @@ Song* create_song(const char* singer, const char* title) {
     return new_song;
 }
 
-
-
-// Function to add a song to a playlist
+// Menambahkan lagu baru ke playlist 
 void add_song(Playlist* playlist, const char* singer, const char* title) {
     Song* new_song = create_song(singer, title);
     if (!playlist->head) {
@@ -91,7 +88,7 @@ void add_song(Playlist* playlist, const char* singer, const char* title) {
     printf("Song added to playlist '%s'.\n", playlist->name);
 }
 
-// Function to display songs in a playlist
+// Menampilkan lagu dalam playlist
 void display_playlist(Playlist* playlist) {
     if (!playlist->head) {
         printf("Playlist '%s' is empty!\n", playlist->name);
@@ -106,14 +103,14 @@ void display_playlist(Playlist* playlist) {
     }
 }
 
-// Function to find a playlist by name
+// Menemukan playlist dari nama 
 Playlist* find_playlist(Playlist* head, const char* name) {
     while (head && strcmp(head->name, name) != 0)
         head = head->next;
     return head;
 }
 
-// Function to add a new playlist
+// Menambahkan playlist baru
 Playlist* add_playlist(Playlist* head, const char* name) {
     Playlist* new_playlist = create_playlist(name);
     if (!head) return new_playlist;
@@ -123,7 +120,7 @@ Playlist* add_playlist(Playlist* head, const char* name) {
     return head;
 }
 
-// Function to free all songs in a playlist
+// Menghapus semua lagu dari playlist
 void free_songs(Song* head) {
     while (head) {
         Song* temp = head;
@@ -132,7 +129,7 @@ void free_songs(Song* head) {
     }
 }
 
-// Function to free all playlists
+// Menghapus semua playlist
 void free_playlists(Playlist* head) {
     while (head) {
         Playlist* temp = head;
@@ -142,13 +139,13 @@ void free_playlists(Playlist* head) {
     }
 }
 
-// Main function
+// Fungsi utama 
 int main() {
     Playlist* playlists = NULL;
     int choice;
     char playlist_name[100], singer[100], title[100];
 
-    // Clear the screen (cross-platform)
+    // Membersihkan screen 
 #ifdef _WIN32
     system("cls");
 #else
