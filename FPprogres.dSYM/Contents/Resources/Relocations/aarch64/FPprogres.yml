@@ -1,0 +1,17 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/dina-r/FP-ATP-Kelompok-/FPprogres'
+relocations:
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _printASCIIArt, symObjAddr: 0x0, symBinAddr: 0x100002CF0, symSize: 0xF4 }
+  - { offsetInCU: 0xD1, offset: 0xD1, size: 0x8, addend: 0x0, symName: _printASCIIArt, symObjAddr: 0x0, symBinAddr: 0x100002CF0, symSize: 0xF4 }
+  - { offsetInCU: 0xE6, offset: 0xE6, size: 0x8, addend: 0x0, symName: _printWelcomeMessage, symObjAddr: 0xF4, symBinAddr: 0x100002DE4, symSize: 0x48 }
+  - { offsetInCU: 0xFB, offset: 0xFB, size: 0x8, addend: 0x0, symName: _create_playlist, symObjAddr: 0x13C, symBinAddr: 0x100002E2C, symSize: 0x4C }
+  - { offsetInCU: 0x131, offset: 0x131, size: 0x8, addend: 0x0, symName: _create_song, symObjAddr: 0x188, symBinAddr: 0x100002E78, symSize: 0x60 }
+  - { offsetInCU: 0x175, offset: 0x175, size: 0x8, addend: 0x0, symName: _add_song, symObjAddr: 0x1E8, symBinAddr: 0x100002ED8, symSize: 0xBC }
+  - { offsetInCU: 0x1DF, offset: 0x1DF, size: 0x8, addend: 0x0, symName: _display_playlist, symObjAddr: 0x2A4, symBinAddr: 0x100002F94, symSize: 0xE0 }
+  - { offsetInCU: 0x21F, offset: 0x21F, size: 0x8, addend: 0x0, symName: _find_playlist, symObjAddr: 0x384, symBinAddr: 0x100003074, symSize: 0x7C }
+  - { offsetInCU: 0x255, offset: 0x255, size: 0x8, addend: 0x0, symName: _add_playlist, symObjAddr: 0x400, symBinAddr: 0x1000030F0, symSize: 0x9C }
+  - { offsetInCU: 0x2A7, offset: 0x2A7, size: 0x8, addend: 0x0, symName: _free_songs, symObjAddr: 0x49C, symBinAddr: 0x10000318C, symSize: 0x54 }
+  - { offsetInCU: 0x2E7, offset: 0x2E7, size: 0x8, addend: 0x0, symName: _free_playlists, symObjAddr: 0x4F0, symBinAddr: 0x1000031E0, symSize: 0x60 }
+  - { offsetInCU: 0x327, offset: 0x327, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x550, symBinAddr: 0x100003240, symSize: 0x40C }
+...
