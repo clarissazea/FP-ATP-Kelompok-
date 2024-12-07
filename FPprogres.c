@@ -16,17 +16,7 @@ typedef struct Playlist {
     struct Playlist* next;
 } Playlist;
 
-// Mendefinisikan fungsi untuk dipanggil
-void printASCIIArt();
-void printWelcomeMessage();
-Song* create_song(const char* singer, const char* title);
-Playlist* create_playlist(const char* name);
-void add_song(Playlist* playlist, const char* singer, const char* title);
-void display_playlist(Playlist* playlist);
-Playlist* find_playlist(Playlist* head, const char* name);
-Playlist* add_playlist(Playlist* head, const char* name);
-void free_songs(Song* head);
-void free_playlists(Playlist* head);
+
 
 void printASCIIArt() {
     printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
