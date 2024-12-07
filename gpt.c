@@ -2,50 +2,45 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Mendefinisikan struktur untuk lagu 
+// Struktur untuk lagu
 typedef struct Song {
     char singer[100];
     char title[100];
     char album[100];
-    int duration; // durasi dalam detik
+    int duration;
     struct Song* next;
 } Song;
 
-// Mendefinisikan struktur untuk playlist
+// Struktur untuk playlist
 typedef struct Playlist {
     char name[100];
     Song* head;
     struct Playlist* next;
 } Playlist;
 
-// Fungsi prototipe
-void printASCIIArt();
-void printWelcomeMessage();
-Song* create_song(const char* singer, const char* title, const char* album, int duration);
-Playlist* create_playlist(const char* name);
+// Prototipe fungsi
 void add_song(Playlist* playlist, const char* singer, const char* title, const char* album, int duration);
 void display_playlist(Playlist* playlist);
-Playlist* find_playlist(Playlist* head, const char* name);
-Playlist* add_playlist(Playlist* head, const char* name);
 void search_song(Playlist* playlist, const char* title);
 void sort_playlist(Playlist* playlist, int by_singer);
-void display_all_playlists(Playlist* head);
-void free_songs(Song* head);
+void remove_song(Playlist* playlist, const char* title);
+void load_songs_from_file(Playlist* playlist, const char* filename);
+Playlist* find_playlist(Playlist* head, const char* name);
+Playlist* add_playlist(Playlist* head, const char* name);
 void free_playlists(Playlist* head);
+void printASCIIArt();
+void printWelcomeMessage();
 
-// Fungsi utama
 int main() {
     Playlist* playlists = NULL;
     int choice;
 
-    // Membersihkan layar
 #ifdef _WIN32
     system("cls");
 #else
     printf("\033[2J\033[1;1H");
 #endif
 
-    // Menampilkan tampilan awal Spotify
     printASCIIArt();
     printWelcomeMessage();
 
@@ -57,7 +52,9 @@ int main() {
         printf("4. Search Song in Playlist\n");
         printf("5. Sort Playlist\n");
         printf("6. Display All Playlists\n");
-        printf("7. Exit\n");
+        printf("7. Remove Song from Playlist\n");
+        printf("8. Load Songs from File\n");
+        printf("9. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
@@ -137,16 +134,44 @@ int main() {
                 break;
             }
             case 6:
-                display_all_playlists(playlists);
+                display_playlist(playlists);
                 break;
-            case 7:
+            case 7: {
+                char playlist_name[100], title[100];
+                printf("Enter playlist name: ");
+                scanf(" %99[^\n]", playlist_name);
+                Playlist* playlist = find_playlist(playlists, playlist_name);
+                if (playlist) {
+                    printf("Enter Title of Song to Remove: ");
+                    scanf(" %99[^\n]", title);
+                    remove_song(playlist, title);
+                } else {
+                    printf("Playlist '%s' not found.\n", playlist_name);
+                }
+                break;
+            }
+            case 8: {
+                char playlist_name[100], filename[100];
+                printf("Enter playlist name: ");
+                scanf(" %99[^\n]", playlist_name);
+                Playlist* playlist = find_playlist(playlists, playlist_name);
+                if (playlist) {
+                    printf("Enter filename: ");
+                    scanf(" %99[^\n]", filename);
+                    load_songs_from_file(playlist, filename);
+                } else {
+                    printf("Playlist '%s' not found.\n", playlist_name);
+                }
+                break;
+            }
+            case 9:
                 printf("Exiting...\n");
                 free_playlists(playlists);
                 break;
             default:
                 printf("Invalid choice! Try again.\n");
         }
-    } while (choice != 7);
+    } while (choice != 9);
 
     return 0;
 }
@@ -244,6 +269,50 @@ void display_all_playlists(Playlist* head) {
         printf("- %s (Total Duration: %d seconds)\n", head->name, total_duration);
         head = head->next;
     }
+}
+
+void remove_song(Playlist* playlist, const char* title) {
+    if (!playlist->head) {
+        printf("Playlist '%s' is empty!\n", playlist->name);
+        return;
+    }
+
+    Song* temp = playlist->head;
+    Song* prev = NULL;
+
+    while (temp) {
+        if (strcmp(temp->title, title) == 0) {
+            if (prev) {
+                prev->next = temp->next;
+            } else {
+                playlist->head = temp->next;
+            }
+            free(temp);
+            printf("Song '%s' removed from playlist '%s'.\n", title, playlist->name);
+            return;
+        }
+        prev = temp;
+        temp = temp->next;
+    }
+    printf("Song '%s' not found in playlist '%s'.\n", title, playlist->name);
+}
+
+void load_songs_from_file(Playlist* playlist, const char* filename) {
+    FILE* file = fopen(filename, "r");
+    if (!file) {
+        printf("Failed to open file '%s'.\n", filename);
+        return;
+    }
+
+    char singer[100], title[100], album[100];
+    int duration;
+
+    while (fscanf(file, " %99[^,], %99[^,], %99[^,], %d", singer, title, album, &duration) == 4) {
+        add_song(playlist, singer, title, album, duration);
+    }
+
+    fclose(file);
+    printf("Songs loaded into playlist '%s' from file '%s'.\n", playlist->name, filename);
 }
 
 Playlist* find_playlist(Playlist* head, const char* name) {
