@@ -103,10 +103,10 @@ void display_playlist(Playlist* playlist) {
     }
 }
 
-// Menemukan playlist dari nama 
+// Menemukan playlist dari nama, strcmp buat compare
 Playlist* find_playlist(Playlist* head, const char* name) {
-    while (head && strcmp(head->name, name) != 0)
-        head = head->next;
+    while (head && strcmp(head->name, name) != 0){
+        head = head->next;}
     return head;
 }
 
@@ -222,6 +222,7 @@ int main() {
                 }
                 break;
             }
+
             case 4:
                 printf("Exiting...\n");
                 free_playlists(playlists);
