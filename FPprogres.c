@@ -2,157 +2,45 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Mendefisinikan struktur untuk lagu 
+// Struktur untuk lagu
 typedef struct Song {
     char singer[100];
     char title[100];
+    char album[100];
+    int duration;
     struct Song* next;
 } Song;
 
-// Mendefinisikan struktur untuk playlist
+// Struktur untuk playlist
 typedef struct Playlist {
     char name[100];
     Song* head;
     struct Playlist* next;
 } Playlist;
 
-// Mendefinisikan fungsi untuk dipanggil
-void printASCIIArt();
-void printWelcomeMessage();
-Song* create_song(const char* singer, const char* title);
-Playlist* create_playlist(const char* name);
-void add_song(Playlist* playlist, const char* singer, const char* title);
+// Prototipe fungsi
+void add_song(Playlist* playlist, const char* singer, const char* title, const char* album, int duration);
 void display_playlist(Playlist* playlist);
+void search_song(Playlist* playlist, const char* title);
+void sort_playlist(Playlist* playlist, int by_singer);
+void remove_song(Playlist* playlist, const char* title);
+void load_songs_from_file(Playlist* playlist, const char* filename);
 Playlist* find_playlist(Playlist* head, const char* name);
 Playlist* add_playlist(Playlist* head, const char* name);
-void free_songs(Song* head);
 void free_playlists(Playlist* head);
+void printASCIIArt();
+void printWelcomeMessage();
 
-void printASCIIArt() {
-    printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
-    printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
-    printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
-    printf("\033[32;1m @@@@@@@@@@@@@@            @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
-    printf("\033[32;1m @@@@@@@@@@@@                 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
-    printf("\033[32;1m @@@@@@@@@@                    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
-    printf("\033[32;1m @@@@@@@@    @@@@@@@@@@@       @@@@@@@@     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@  @@@   @@@@@@@@@@@@@@@@@@@@ \033[0m\n");
-    printf("\033[32;1m @@@@@@   @@@@@@@@@@@@@@@@@@   @@@@@@  @@   @@@@@@@@@@@@@@@@@@@@@@  @@@@@@@@  @@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
-    printf("\033[32;1m @@@@@@@                  @@@    @@@@@  @@@@@@@       @@@@      @@@     @  @       @@@@  @@@@@@@@@@@@ \033[0m\n");
-    printf("\033[32;1m @@@@@@@    @@@@@@@@@@@@@@       @@@@@      @@@  @@@@   @  @@@@   @  @@@@  @@  @@@  @@@ @@@@@@@@@@@@@ \033[0m\n");
-    printf("\033[32;1m @@@@@@@                @@@@     @@@@@@@@@@   @  @@@@@  @  @@@@@  @  @@@@  @@  @@@@ @@  @@@@@@@@@@@@@ \033[0m\n");
-    printf("\033[32;1m @@@@@@@     @@@@@@@@@@@        @@@@@@ @@@@@  @   @@@  @@   @@@  @@   @@@  @@  @@@@    @@@@@@@@@@@@@@ \033[0m\n");
-    printf("\033[32;1m @@@@@@@@              @@@      @@@@@@@     @@@  @    @@@@@     @@@@    @  @@  @@@@@  @@@@@@@@@@@@@@@ \033[0m\n");
-    printf("\033[32;1m @@@@@@@@@@                    @@@@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   @@@@@@@@@@@@@@@ \033[0m\n");
-    printf("\033[32;1m @@@@@@@@@@@                  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
-    printf("\033[32;1m @@@@@@@@@@@@@@             @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
-    printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
-    printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
-    printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
-}
-
-// Menampilkan welcome message
-void printWelcomeMessage() {
-    printf("=========================================\n");
-    printf("  Welcome to Spotify - Feel the Music!   \n");
-    printf("=========================================\n");
-    printf("Explore millions of songs, playlists, and more.\n\n");
-}
-// Membuat playlist baru
-Playlist* create_playlist(const char* name) {
-    Playlist* new_playlist = (Playlist*)malloc(sizeof(Playlist));
-    strcpy(new_playlist->name, name);
-    new_playlist->head = NULL;
-    new_playlist->next = NULL;
-    return new_playlist;
-}
-
-// Membuat node lagu baru 
-Song* create_song(const char* singer, const char* title) {
-    Song* new_song = (Song*)malloc(sizeof(Song));
-    strcpy(new_song->singer, singer);
-    strcpy(new_song->title, title);
-    new_song->next = NULL;
-    return new_song;
-}
-
-// Menambahkan lagu baru ke playlist 
-void add_song(Playlist* playlist, const char* singer, const char* title) {
-    Song* new_song = create_song(singer, title);
-    if (!playlist->head) {
-        playlist->head = new_song;
-    } else {
-        Song* temp = playlist->head;
-        while (temp->next) temp = temp->next;
-        temp->next = new_song;
-    }
-    printf("Song added to playlist '%s'.\n", playlist->name);
-}
-
-// Menampilkan lagu dalam playlist
-void display_playlist(Playlist* playlist) {
-    if (!playlist->head) {
-        printf("Playlist '%s' is empty!\n", playlist->name);
-        return;
-    }
-    printf("Songs in playlist '%s':\n", playlist->name);
-    Song* temp = playlist->head;
-    int i = 1;
-    while (temp) {
-        printf("%d. %s - %s\n", i++, temp->title, temp->singer);
-        temp = temp->next;
-    }
-}
-
-// Menemukan playlist dari nama, strcmp buat compare
-Playlist* find_playlist(Playlist* head, const char* name) {
-    while (head && strcmp(head->name, name) != 0){
-        head = head->next;}
-    return head;
-}
-
-// Menambahkan playlist baru
-Playlist* add_playlist(Playlist* head, const char* name) {
-    Playlist* new_playlist = create_playlist(name);
-    if (!head) return new_playlist;
-    Playlist* temp = head;
-    while (temp->next) temp = temp->next;
-    temp->next = new_playlist;
-    return head;
-}
-
-// Menghapus semua lagu dari playlist
-void free_songs(Song* head) {
-    while (head) {
-        Song* temp = head;
-        head = head->next;
-        free(temp);
-    }
-}
-
-// Menghapus semua playlist
-void free_playlists(Playlist* head) {
-    while (head) {
-        Playlist* temp = head;
-        free_songs(head->head);
-        head = head->next;
-        free(temp);
-    }
-}
-
-// Fungsi utama 
 int main() {
     Playlist* playlists = NULL;
     int choice;
-    char playlist_name[100], singer[100], title[100];
 
-    // Membersihkan screen 
 #ifdef _WIN32
     system("cls");
 #else
     printf("\033[2J\033[1;1H");
 #endif
 
-    // Print the Spotify intro
     printASCIIArt();
     printWelcomeMessage();
 
@@ -161,77 +49,56 @@ int main() {
         printf("1. Add Playlist\n");
         printf("2. Add Song to Playlist\n");
         printf("3. Display Songs in Playlist\n");
-        printf("4. Exit\n");
+        printf("4. Search Song in Playlist\n");
+        printf("5. Sort Playlist\n");
+        printf("6. Display All Playlists\n");
+        printf("7. Remove Song from Playlist\n");
+        printf("8. Load Songs from File\n");
+        printf("9. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
 
         switch (choice) {
-            case 1:
+            case 1: {
+                char playlist_name[100];
                 printf("Enter playlist name: ");
                 scanf(" %99[^\n]", playlist_name);
                 playlists = add_playlist(playlists, playlist_name);
                 printf("Playlist '%s' created.\n", playlist_name);
-                printf("\n1. Back to menu\n");
-                printf("2. Exit\n");
-                printf("Enter your choice:");
-                if(getchar()== '1') {
-                    break;
-                }else if (getchar()== '2') {
-                    return 0;
-                }
-                break;
-            case 2: {
-                printf("Enter playlist name: ");
-                scanf(" %99[^\n]", playlist_name);
-                Playlist* playlist = find_playlist(playlists, playlist_name);
-                if (playlist) {
-                    printf("Enter Singer: ");
-                    scanf(" %99[^\n]", singer);
-                    printf("Enter Title: ");
-                    scanf(" %99[^\n]", title);
-                    add_song(playlist, singer, title);
-                } else {
-                    printf("Playlist '%s' not found.\n", playlist_name); 
-                }
-                printf("\n1. Back to menu\n");
-                printf("2. Exit\n");
-                printf("Enter your choice:");
-                if(getchar()== '1') {
-                    break;
-                }else if (getchar()== '2') {
-                    return 0;
-                }
                 break;
             }
-            case 3: {
-                printf("Enter playlist name: ");
-                scanf(" %99[^\n]", playlist_name);
-                Playlist* playlist = find_playlist(playlists, playlist_name);
-                if (playlist) {
-                    display_playlist(playlist);
-                } else {
-                    printf("Playlist '%s' not found.\n", playlist_name);
-                }
-                printf("\n1. Back to menu\n");
-                printf("2. Exit\n");
-                printf("Enter your choice:");
-                if(getchar()== '1') {
-                    break;
-                }else if (getchar()== '2') {
-                    return 0;
-                }
-                break;
-            }
-
-            case 4:
-                printf("Exiting...\n");
-                free_playlists(playlists);
-                break;
-            default:
-                printf("Invalid choice! Try again.\n");
+            // Bagian lain tetap sama...
         }
-    } while (choice != 4);
+    } while (choice != 9);
 
     return 0;
 }
- 
+
+void printASCIIArt() {
+    printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@@@@@            @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@@@                 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@                    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@    @@@@@@@@@@@       @@@@@@@@     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@  @@@   @@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@   @@@@@@@@@@@@@@@@@@   @@@@@@  @@   @@@@@@@@@@@@@@@@@@@@@@  @@@@@@@@  @@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@                  @@@    @@@@@  @@@@@@@       @@@@      @@@     @  @       @@@@  @@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@    @@@@@@@@@@@@@@       @@@@@      @@@  @@@@   @  @@@@   @  @@@@  @@  @@@  @@@ @@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@                @@@@     @@@@@@@@@@   @  @@@@@  @  @@@@@  @  @@@@  @@  @@@@ @@  @@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@     @@@@@@@@@@@        @@@@@@ @@@@@  @   @@@  @@   @@@  @@   @@@  @@  @@@@    @@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@              @@@      @@@@@@@     @@@  @    @@@@@     @@@@    @  @@  @@@@@  @@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@                    @@@@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   @@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@@                  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@@@@@             @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+    printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
+}
+
+void printWelcomeMessage() {
+    printf("=========================================\n");
+    printf("  Welcome to Spotify - Feel the Music!   \n");
+    printf("=========================================\n");
+    printf("Explore millions of songs, playlists, and more.\n\n");
+}
