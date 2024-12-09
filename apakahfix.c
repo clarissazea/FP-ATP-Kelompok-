@@ -2,22 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Struktur untuk lagu
-typedef struct Song {
-    char singer[100];
-    char title[100];
-    char album[100];
-    int duration;
-    struct Song* next;
-} Song;
-
-// Struktur untuk playlist
-typedef struct Playlist {
-    char name[100];
-    Song* head;
-    struct Playlist* next;
-} Playlist;
-
 void printASCIIArt() {
     printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
     printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
@@ -40,13 +24,28 @@ void printASCIIArt() {
     printf("\033[32;1m @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \033[0m\n");
 }
 
-// Menampilkan welcome message
 void printWelcomeMessage() {
     printf("=========================================\n");
     printf("  Welcome to Spotify - Feel the Music!   \n");
     printf("=========================================\n");
     printf("Explore millions of songs, playlists, and more.\n\n");
 }
+
+// Struktur untuk lagu
+typedef struct Song {
+    char singer[100];
+    char title[100];
+    char album[100];
+    int duration;
+    struct Song* next;
+} Song;
+
+// Struktur untuk playlist
+typedef struct Playlist {
+    char name[100];
+    Song* head;
+    struct Playlist* next;
+} Playlist;
 
 // Prototipe fungsi
 void add_song(Playlist* playlist, const char* singer, const char* title, const char* album, int duration);
@@ -58,7 +57,6 @@ void load_songs_from_file(Playlist* playlist, const char* filename);
 Playlist* find_playlist(Playlist* head, const char* name);
 Playlist* add_playlist(Playlist* head, const char* name);
 void free_playlists(Playlist* head);
-void printASCIIArt();
 void printWelcomeMessage();
 
 int main() {
@@ -206,185 +204,4 @@ int main() {
     return 0;
 }
 
-// Fungsi tambahan
-Song* create_song(const char* singer, const char* title, const char* album, int duration) {
-    Song* new_song = (Song*)malloc(sizeof(Song));
-    strcpy(new_song->singer, singer);
-    strcpy(new_song->title, title);
-    strcpy(new_song->album, album);
-    new_song->duration = duration;
-    new_song->next = NULL;
-    return new_song;
-}
-
-void add_song(Playlist* playlist, const char* singer, const char* title, const char* album, int duration) {
-    Song* new_song = create_song(singer, title, album, duration);
-    if (!playlist->head) {
-        playlist->head = new_song;
-    } else {
-        Song* temp = playlist->head;
-        while (temp->next) temp = temp->next;
-        temp->next = new_song;
-    }
-    printf("Song added to playlist '%s'.\n", playlist->name);
-}
-
-void display_playlist(Playlist* playlist) {
-    if (!playlist->head) {
-        printf("Playlist '%s' is empty!\n", playlist->name);
-        return;
-    }
-    printf("Songs in playlist '%s':\n", playlist->name);
-    Song* temp = playlist->head;
-    while (temp) {
-        printf("- %s by %s (%s) [%d sec]\n", temp->title, temp->singer, temp->album, temp->duration);
-        temp = temp->next;
-    }
-}
-
-int starts_with(const char *str, const char *prefix) {
-    size_t prefix_len = strlen(prefix);
-
-    // Compare the first prefix_len characters of str with prefix
-    return strncmp(str, prefix, prefix_len) == 0;
-}
-
-void search_song(Playlist* playlist, const char* title) {
-    Song* temp = playlist->head;
-    int found =0;
-    while (temp) {
-        // if (strcmp(temp->title, title) == 0) {
-        // if (strstr(temp->title,title)!=NULL){
-        if (starts_with(temp->title,title)){
-            printf("Found: %s by %s (%s) [%d sec]\n", temp->title, temp->singer, temp->album, temp->duration);
-            // return;
-            found=1;
-        }
-        temp = temp->next;
-    }
-    if (found!=1){
-        printf("Title '%s' not found in playlist '%s'.\n", title, playlist->name);
-    }
-}
-
-void sort_playlist(Playlist* playlist, int by_singer) {
-    if (!playlist->head) return;
-    for (Song* i = playlist->head; i && i->next; i = i->next) {
-        for (Song* j = playlist->head; j->next; j = j->next) {
-            int comparison = by_singer 
-                             ? strcmp(j->singer, j->next->singer) 
-                             : strcmp(j->title, j->next->title);
-            if (comparison > 0) {
-                Song temp = *j;
-                *j = *(j->next);
-                *(j->next) = temp;
-            }
-        }
-    }
-}
-
-void display_all_playlists(Playlist* head) {
-    if (!head) {
-        printf("No playlists available.\n");
-        return;
-    }
-    printf("Available Playlists:\n");
-    while (head) {
-        int total_duration = 0;
-        Song* temp = head->head;
-        while (temp) {
-            total_duration += temp->duration;
-            temp = temp->next;
-        }
-        printf("- %s (Total Duration: %d seconds)\n", head->name, total_duration);
-        head = head->next;
-    }
-}
-
-void remove_song(Playlist* playlist, const char* title) {
-    if (!playlist->head) {
-        printf("Playlist '%s' is empty!\n", playlist->name);
-        return;
-    }
-
-    Song* temp = playlist->head;
-    Song* prev = NULL;
-
-    while (temp) {
-        if (strcmp(temp->title, title) == 0) {
-            if (prev) {
-                prev->next = temp->next;
-            } else {
-                playlist->head = temp->next;
-            }
-            free(temp);
-            printf("Song '%s' removed from playlist '%s'.\n", title, playlist->name);
-            return;
-        }
-        prev = temp;
-        temp = temp->next;
-    }
-    printf("Song '%s' not found in playlist '%s'.\n", title, playlist->name);
-}
-
-void load_songs_from_file(Playlist* playlist, const char* filename) {
-    FILE* file = fopen(filename, "r");
-    if (!file) {
-        printf("Failed to open file '%s'.\n", filename);
-        return;
-    }
-
-    char singer[100], title[100], album[100];
-    int duration;
-
-    while (fscanf(file, " %99[^,], %99[^,], %99[^,], %d", singer, title, album, &duration) == 4) {
-        add_song(playlist, singer, title, album, duration);
-    }
-
-    fclose(file);
-    printf("Songs loaded into playlist '%s' from file '%s'.\n", playlist->name, filename);
-}
-
-Playlist* find_playlist(Playlist* head, const char* name) {
-    while (head && strcmp(head->name, name) != 0)
-        head = head->next;
-    return head;
-}
-
-Playlist* add_playlist(Playlist* head, const char* name) {
-    Playlist* new_playlist = (Playlist*)malloc(sizeof(Playlist));
-    strcpy(new_playlist->name, name);
-    new_playlist->head = NULL;
-    new_playlist->next = NULL;
-    if (!head) return new_playlist;
-    Playlist* temp = head;
-    while (temp->next) temp = temp->next;
-    temp->next = new_playlist;
-    return head;
-}
-
-void free_songs(Song* head) {
-    while (head) {
-        Song* temp = head;
-        head = head->next;
-        free(temp);
-    }
-}
-
-void free_playlists(Playlist* head) {
-    while (head) {
-        Playlist* temp = head;
-        free_songs(head->head);
-        head = head->next;
-        free(temp);
-    }
-}
-
-void printASCIIArt() {
-    // Placeholder ASCII art
-    printf("=== Welcome to Spotify! ===\n");
-}
-
-void printWelcomeMessage() {
-    printf("Enjoy millions of songs and playlists.\n");
-}
+// Tambahkan implementasi fungsi tambahan lainnya...
