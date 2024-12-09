@@ -75,7 +75,6 @@ do {
             printf("Enter playlist name: ");
             scanf(" %99[^\n]", playlist_name);
             playlists = add_playlist(playlists, playlist_name);
-            printf("Playlist '%s' created.\n", playlist_name);
             break;
         }
         case 2: {
