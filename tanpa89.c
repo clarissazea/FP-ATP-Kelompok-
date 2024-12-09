@@ -53,11 +53,11 @@ void display_playlist(Playlist* playlist);
 void search_song(Playlist* playlist, const char* title);
 void sort_playlist(Playlist* playlist, int by_singer);
 void remove_song(Playlist* playlist, const char* title);
-void load_songs_from_file(Playlist* playlist, const char* filename);
 Playlist* find_playlist(Playlist* head, const char* name);
 Playlist* add_playlist(Playlist* head, const char* name);
 void free_playlists(Playlist* head);
 void printWelcomeMessage();
+
 
 
 
@@ -182,46 +182,6 @@ void remove_song(Playlist* playlist, const char* title) {
     printf("Song '%s' not found in playlist '%s'.\n", title, playlist->name);
 }
 
-void load_songs_from_file(Playlist* playlist, const char* filename) {
-    FILE* file = fopen(filename, "r");
-    if (!file) {
-        printf("Failed to open file '%s'.\n", filename);
-        return;
-    }
-
-    char singer[100], title[100], album[100];
-    int duration;
-
-    while (fscanf(file, " %99[^,], %99[^,], %99[^,], %d", singer, title, album, &duration) == 4) {
-        add_song(playlist, singer, title, album, duration);
-    }
-
-    fclose(file);
-    printf("Songs loaded into playlist '%s' from file '%s'.\n", playlist->name, filename);
-}
-
-void download_playlist(Playlist* head, const char* filename) {
-    FILE* file = fopen(filename, "w");
-    if (!file) {
-        printf("Failed to open file for writing.\n");
-        return;
-    }
-    
-    Playlist* temp_playlist = head;
-    while (temp_playlist) {
-        fprintf(file, "Playlist: %s\n", temp_playlist->name);
-        Song* temp_song = temp_playlist->head;
-        while (temp_song) {
-            fprintf(file, "%s by %s (%s) [%d sec]\n", temp_song->title, temp_song->singer, temp_song->album, temp_song->duration);
-            temp_song = temp_song->next;
-        }
-        fprintf(file, "\n"); // Add an empty line between playlists
-        temp_playlist = temp_playlist->next;
-    }
-
-    fclose(file);
-    printf("Playlist(s) downloaded to '%s'.\n", filename);
-}
 
 Playlist* find_playlist(Playlist* head, const char* name) {
     while (head && strcmp(head->name, name) != 0)
@@ -240,6 +200,93 @@ Playlist* add_playlist(Playlist* head, const char* name) {
     temp->next = new_playlist;
     return head;
 }
+// Function to import a playlist from a CSV file
+Playlist* importPlaylistFromFile(Playlist* head,const char* filename) {
+    FILE* file = fopen(filename, "r");
+    if (!file) {
+        perror("Failed to open file");
+        return NULL;
+    }
+
+    // Extract the playlist name from the filename
+    char name[100];
+    sscanf(filename, "%99[^.].txt", name); // Extract the part before ".txt"
+    
+    // Check if playlist already exists
+    Playlist* existingPlaylist = find_playlist(head, name);
+    if (existingPlaylist) {
+        printf("Playlist '%s' already exists. Import aborted.\n", name);
+        fclose(file);
+        return NULL;
+    }
+
+    // Create a new playlist
+    
+    // Playlist* newPlaylist = createPlaylist(name);
+    head=add_playlist(head,name);
+    head = find_playlist(head, name);
+
+    char line[500];
+    fgets(line, sizeof(line), file); // Skip header line
+
+    while (fgets(line, sizeof(line), file)) {
+        char singer[100], title[100], album[100];
+        int duration;
+
+        // Parse CSV line
+        if (sscanf(line, "%99[^,],%99[^,],%99[^,],%d",
+                   singer, title, album, &duration) == 4) {
+           add_song(head, singer, title, album, duration);
+            // add_song(playlist, song);
+        }
+    }
+
+    fclose(file);
+
+    // Add the new playlist to the list of playlists
+    // addPlaylist(head, newPlaylist);
+    printf("Playlist '%s' imported from %s.\n", name, filename);
+    return head;
+}
+
+void savePlaylistToFile(Playlist* head, const char* playlistName) {
+    Playlist* playlist = find_playlist(head, playlistName);
+    if (!playlist) {
+        printf("Playlist '%s' not found.\n", playlistName);
+        return;
+    }
+
+    if (!playlist->head) {
+        printf("Playlist '%s' is empty.\n", playlistName);
+        return;
+    }
+
+    char filename[200];
+    snprintf(filename, sizeof(filename), "%s.txt", playlist->name);
+
+    FILE* file = fopen(filename, "w");
+    if (!file) {
+        perror("Failed to open file");
+        return;
+    }
+
+    fprintf(file, "Singer,Title,Album,Duration\n"); // Write CSV header
+    Song* current = playlist->head;
+    while (current) {
+        fprintf(file, "%s,%s,%s,%d\n",
+                current->singer,
+                current->title,
+                current->album,
+                current->duration);
+        current = current->next;
+    }
+
+    fclose(file);
+    printf("Playlist '%s' saved to %s\n", playlist->name, filename);
+}
+
+
+
 
 void free_songs(Song* head) {
     while (head) {
@@ -281,14 +328,14 @@ int main() {
     printf("5. Sort Playlist\n");
     printf("6. Display All Playlists\n");
     printf("7. Remove Song from Playlist\n");
-    printf("8. Load Songs from File\n");
-    printf("9. Download Playlist to Text File\n");
+    printf("8. Import playlist and songs from file txt\n");
+    printf("9. Save playlist to file txt\n");
     printf("10. Exit\n");
      // Pilihan baru untuk mendownload playlist ke file
     printf("Enter your choice: ");
     scanf("%d", &choice);
 
-// } while (choice != 9);
+// } while (choice != 10);
 
 
         switch (choice) {
@@ -382,34 +429,29 @@ int main() {
                     printf("Playlist '%s' not found.\n", playlist_name);
                 }
                 break;
-            }
-            case 8: {
-                char playlist_name[100], filename[100];
+            case 8:{
+                char filename[100], title[100];
+                printf("Enter  playlist txt filename: ");
+                scanf(" %99[^\n]", filename);
+                // if(!importPlaylistFromFile(playlists,filename)){
+                //     printf("error\n");
+                // }else{}
+                playlists= importPlaylistFromFile(playlists,filename);
+                break;
+
+
+            }case 9:{
+                char playlist_name[100], title[100];
                 printf("Enter playlist name: ");
                 scanf(" %99[^\n]", playlist_name);
-                // Playlist* playlist = find_playlist(playlists, playlist_name);
-                playlists = add_playlist(playlists, playlist_name);
-                if (playlists) {
-                    printf("Enter filename: ");
-                    scanf(" %99[^\n]", filename);
-                    load_songs_from_file(playlists, filename);
-                } else {
-                    printf("Playlist '%s' not found.\n", playlist_name);
+                Playlist* save = find_playlist(playlists, playlist_name);
+                if(save !=NULL){
+                    savePlaylistToFile(save,playlist_name);
+                }else{
+                    printf("error");
                 }
                 break;
-            }case 9:{
-                char playlist_name[100], filename[100];
-                printf("Enter playlist name: ");
-                scanf(" %99[^\n]", playlist_name); // Meminta nama playlist
-                Playlist* playlist = find_playlist(playlists, playlist_name);
-                if (playlist) {
-                    printf("Enter filename to save playlist: ");
-                    scanf(" %99[^\n]", filename); // Meminta nama file untuk menyimpan
-                    download_playlist(playlist, filename); // Memanggil fungsi untuk mengunduh playlist ke file
-                } else {
-                    printf("Playlist '%s' not found.\n", playlist_name); // Menangani jika playlist tidak ditemukan
-                }
-                break;       
+            }
 
             }case 10:{
                 printf("Exiting...\n");
@@ -418,7 +460,7 @@ int main() {
             }
             default:
                 printf("Invalid choice! Try again.\n");
-        }
+            }
     } while (choice != 10);
 
     return 0;
