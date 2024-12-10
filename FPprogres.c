@@ -374,7 +374,7 @@ int main() {
     printf("10. Exit\n");
      // Pilihan baru untuk mendownload playlist ke file
     printf("Enter your choice: ");
-    scanf("%d", &choice);
+    // scanf("%d", &choice);
 
 <<<<<<< HEAD
 // } while (choice != 10);
