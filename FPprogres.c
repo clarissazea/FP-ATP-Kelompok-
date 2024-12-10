@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Struktur untuk lagu
+// Struct untuk lagu
 typedef struct Song {
     char singer[100];
     char title[100];
@@ -11,7 +11,7 @@ typedef struct Song {
     struct Song* next;
 } Song;
 
-// Struktur untuk playlist
+// Struct untuk playlist
 typedef struct Playlist {
     char name[100];
     Song* head;
@@ -59,12 +59,7 @@ void free_playlists(Playlist* head);
 void printWelcomeMessage();
 
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 21464d7dfa717e7834079ac8f6a6a21e3b3fe853
-// Fungsi tambahan
+// Fungsi membuat lagu
 Song* create_song(const char* singer, const char* title, const char* album, int duration) {
     Song* new_song = (Song*)malloc(sizeof(Song));
     strcpy(new_song->singer, singer);
@@ -76,7 +71,7 @@ Song* create_song(const char* singer, const char* title, const char* album, int 
 }
 
 void add_song(Playlist* playlist, const char* singer, const char* title, const char* album, int duration) {
-    // Periksa apakah lagu dengan judul dan penyanyi yang sama sudah ada
+    // Memeriksa apakah lagu dengan judul dan penyanyi yang sama sudah ada
     Song* temp = playlist->head;
     while (temp) {
         if (strcmp(temp->title, title) == 0 && strcmp(temp->singer, singer) == 0) {
@@ -98,6 +93,7 @@ void add_song(Playlist* playlist, const char* singer, const char* title, const c
     printf("Song '%s' by '%s' added to playlist '%s'.\n", title, singer, playlist->name);
 }
 
+//Fungsi menampilkan playlist
 void display_playlist(Playlist* playlist) {
     if (!playlist->head) {
         printf("Playlist '%s' is empty!\n", playlist->name);
@@ -111,10 +107,9 @@ void display_playlist(Playlist* playlist) {
     }
 }
 
+//Fungsi mencari lagu
 int starts_with(const char *str, const char *prefix) {
     size_t prefix_len = strlen(prefix);
-
-    // Compare the first prefix_len characters of str with prefix
     return strncmp(str, prefix, prefix_len) == 0;
 }
 
@@ -122,11 +117,8 @@ void search_song(Playlist* playlist, const char* title) {
     Song* temp = playlist->head;
     int found =0;
     while (temp) {
-        // if (strcmp(temp->title, title) == 0) {
-        // if (strstr(temp->title,title)!=NULL){
         if (starts_with(temp->title,title)){
             printf("Found: %s by %s (%s) [%d sec]\n", temp->title, temp->singer, temp->album, temp->duration);
-            // return;
             found=1;
         }
         temp = temp->next;
@@ -136,27 +128,59 @@ void search_song(Playlist* playlist, const char* title) {
     }
 }
 
-void sort_playlist(Playlist* playlist, int by_singer) {
-    if (!playlist->head) return;
-    for (Song* i = playlist->head; i && i->next; i = i->next) {
-        for (Song* j = playlist->head; j->next; j = j->next) {
-            int comparison = by_singer 
-                             ? strcmp(j->singer, j->next->singer) 
-                             : strcmp(j->title, j->next->title);
-            if (comparison > 0) {
-                Song temp = *j;
-                *j = *(j->next);
-                *(j->next) = temp;
-            }
-        }
+//Fungsi mengurutkan lagu
+void sort_playlist(Playlist* playlist, int sort_choice) {
+    if (playlist == NULL || playlist->head == NULL || playlist->head->next == NULL) {
+        printf("No need to sort. The playlist is empty or has only one song.\n");
+        return;
     }
+
+    int swapped;
+    Song* ptr;
+    Song* lastPtr = NULL;
+
+    do {
+        swapped = 0;
+        ptr = playlist->head;
+
+        while (ptr->next != lastPtr) {
+            int compare;
+            if (sort_choice == 1) {
+                compare = strcmp(ptr->title, ptr->next->title);
+            } else {
+                compare = strcmp(ptr->singer, ptr->next->singer);
+            }
+
+            if (compare > 0) {
+                // Swap the data between songs
+                char tempSinger[100], tempTitle[100], tempAlbum[100];
+                int tempDuration;
+
+                strcpy(tempSinger, ptr->singer);
+                strcpy(tempTitle, ptr->title);
+                strcpy(tempAlbum, ptr->album);
+                tempDuration = ptr->duration;
+
+                strcpy(ptr->singer, ptr->next->singer);
+                strcpy(ptr->title, ptr->next->title);
+                strcpy(ptr->album, ptr->next->album);
+                ptr->duration = ptr->next->duration;
+
+                strcpy(ptr->next->singer, tempSinger);
+                strcpy(ptr->next->title, tempTitle);
+                strcpy(ptr->next->album, tempAlbum);
+                ptr->next->duration = tempDuration;
+
+                swapped = 1;
+            }
+            ptr = ptr->next;
+        }
+        lastPtr = ptr;
+    } while (swapped);
 }
 
-<<<<<<< HEAD
-void display_all_playlists(Playlist* head)
-=======
+//Fungsi menampilkan seluruh playlist yang telah dibuat
 void display_all_playlists(Playlist* head) {
->>>>>>> 21464d7dfa717e7834079ac8f6a6a21e3b3fe853
     if (!head) {
         printf("No playlists available.\n");
         return;
@@ -174,6 +198,7 @@ void display_all_playlists(Playlist* head) {
     }
 }
 
+//Fungsi menghapus lagu dari playlist
 void remove_song(Playlist* playlist, const char* title) {
     if (!playlist->head) {
         printf("Playlist '%s' is empty!\n", playlist->name);
@@ -207,6 +232,7 @@ Playlist* find_playlist(Playlist* head, const char* name) {
     return head;
 }
 
+//Fungsi menambah playlist
 Playlist* add_playlist(Playlist* head, const char* name) {
     // Cek apakah nama playlist sudah ada
     Playlist* temp = head;
@@ -230,11 +256,8 @@ Playlist* add_playlist(Playlist* head, const char* name) {
     printf("Playlist '%s' created.\n", name);
     return new_playlist;
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> 21464d7dfa717e7834079ac8f6a6a21e3b3fe853
-// Function to import a playlist from a CSV file
+//Fungsi mengimpor playlist dari file
 Playlist* importPlaylistFromFile(Playlist* head,const char* filename) {
     FILE* file = fopen(filename, "r");
     if (!file) {
@@ -242,11 +265,11 @@ Playlist* importPlaylistFromFile(Playlist* head,const char* filename) {
         return NULL;
     }
 
-    // Extract the playlist name from the filename
+    // Mengekstrak nama playlist dari nama file
     char name[100];
-    sscanf(filename, "%99[^.].txt", name); // Extract the part before ".txt"
+    sscanf(filename, "%99[^.].txt", name); // Mengekstrak kata sebelum ".txt"
     
-    // Check if playlist already exists
+    // Mengecek apakah playlist sudah ada
     Playlist* existingPlaylist = find_playlist(head, name);
     if (existingPlaylist) {
         printf("Playlist '%s' already exists. Import aborted.\n", name);
@@ -254,35 +277,30 @@ Playlist* importPlaylistFromFile(Playlist* head,const char* filename) {
         return NULL;
     }
 
-    // Create a new playlist
-    
-    // Playlist* newPlaylist = createPlaylist(name);
     head=add_playlist(head,name);
     head = find_playlist(head, name);
 
     char line[500];
-    fgets(line, sizeof(line), file); // Skip header line
+    fgets(line, sizeof(line), file); 
 
     while (fgets(line, sizeof(line), file)) {
         char singer[100], title[100], album[100];
         int duration;
 
-        // Parse CSV line
+        // Menguraikan
         if (sscanf(line, "%99[^,],%99[^,],%99[^,],%d",
                    singer, title, album, &duration) == 4) {
            add_song(head, singer, title, album, duration);
-            // add_song(playlist, song);
         }
     }
 
     fclose(file);
 
-    // Add the new playlist to the list of playlists
-    // addPlaylist(head, newPlaylist);
     printf("Playlist '%s' imported from %s.\n", name, filename);
     return head;
 }
 
+//Fungsi menyimpan playlist ke file
 void savePlaylistToFile(Playlist* head, const char* playlistName) {
     Playlist* playlist = find_playlist(head, playlistName);
     if (!playlist) {
@@ -304,7 +322,7 @@ void savePlaylistToFile(Playlist* head, const char* playlistName) {
         return;
     }
 
-    fprintf(file, "Singer,Title,Album,Duration\n"); // Write CSV header
+    fprintf(file, "Singer,Title,Album,Duration\n");
     Song* current = playlist->head;
     while (current) {
         fprintf(file, "%s,%s,%s,%d\n",
@@ -319,12 +337,7 @@ void savePlaylistToFile(Playlist* head, const char* playlistName) {
     printf("Playlist '%s' saved to %s\n", playlist->name, filename);
 }
 
-<<<<<<< HEAD
-
-
-
-=======
->>>>>>> 21464d7dfa717e7834079ac8f6a6a21e3b3fe853
+//Fungsi membebaskan memori
 void free_songs(Song* head) {
     while (head) {
         Song* temp = head;
@@ -342,14 +355,10 @@ void free_playlists(Playlist* head) {
     }
 }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 21464d7dfa717e7834079ac8f6a6a21e3b3fe853
 int main() {
     int choice;
-    Playlist *playlists = NULL; // Dummy pointer for demonstration
-    char input[10];            // Buffer to read user input
+    Playlist *playlists = NULL; 
+    char input[10];         
 
 #ifdef _WIN32
     system("cls");
@@ -372,25 +381,17 @@ int main() {
     printf("8. Import playlist and songs from file txt\n");
     printf("9. Save playlist to file txt\n");
     printf("10. Exit\n");
-     // Pilihan baru untuk mendownload playlist ke file
     printf("Enter your choice: ");
-    // scanf("%d", &choice);
 
-<<<<<<< HEAD
-// } while (choice != 10);
-
-=======
     if (scanf("%d", &choice) != 1) {
         // Input bukan angka, tampilkan pesan error
         printf("Invalid choice! Please enter a number.\n");
 
-        // Bersihkan buffer input
         while (getchar() != '\n');
 
         // Lanjutkan loop tanpa menjalankan switch
         continue;
     }
->>>>>>> 21464d7dfa717e7834079ac8f6a6a21e3b3fe853
 
         switch (choice) {
             case 1: {
@@ -459,18 +460,13 @@ int main() {
                     printf("2. Singer\n");
                     printf("Enter your choice: ");
                     scanf("%d", &sort_choice);
-                    sort_playlist(playlist, sort_choice == 2);
+                    sort_playlist(playlist, sort_choice);
                     printf("Playlist '%s' sorted.\n", playlist_name);
                 } else {
                     printf("Playlist '%s' not found.\n", playlist_name);
                 }
                 break;
             }
-<<<<<<< HEAD
-            case 6:
-                display_playlist(playlists);
-                break;
-=======
             case 6: {
             if (playlists == NULL) {
             printf("No playlists exist.\n");
@@ -479,7 +475,6 @@ int main() {
             }
             break;
             }
->>>>>>> 21464d7dfa717e7834079ac8f6a6a21e3b3fe853
             case 7: {
                 char playlist_name[100], title[100];
                 printf("Enter playlist name: ");
@@ -497,9 +492,6 @@ int main() {
                 char filename[100], title[100];
                 printf("Enter  playlist txt filename: ");
                 scanf(" %99[^\n]", filename);
-                // if(!importPlaylistFromFile(playlists,filename)){
-                //     printf("error\n");
-                // }else{}
                 playlists= importPlaylistFromFile(playlists,filename);
                 break;
 
@@ -518,11 +510,7 @@ int main() {
             }
 
             }case 10:{
-<<<<<<< HEAD
-                printf("Exiting...\n");
-=======
                 printf("Exiting program. Goodbye!\n");
->>>>>>> 21464d7dfa717e7834079ac8f6a6a21e3b3fe853
                 free_playlists(playlists);
                 break;
             }
