@@ -352,7 +352,7 @@ int main() {
     printf("10. Exit\n");
      // Pilihan baru untuk mendownload playlist ke file
     printf("Enter your choice: ");
-    scanf("%d", &choice);
+    // scanf("%d", &choice);
 
     if (scanf("%d", &choice) != 1) {
         // Input bukan angka, tampilkan pesan error
