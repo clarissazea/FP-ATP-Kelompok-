@@ -307,9 +307,6 @@ void savePlaylistToFile(Playlist* head, const char* playlistName) {
     printf("Playlist '%s' saved to %s\n", playlist->name, filename);
 }
 
-
-
-
 void free_songs(Song* head) {
     while (head) {
         Song* temp = head;
@@ -327,10 +324,10 @@ void free_playlists(Playlist* head) {
     }
 }
 
-
 int main() {
-    Playlist* playlists = NULL;
     int choice;
+    Playlist *playlists = NULL; // Dummy pointer for demonstration
+    char input[10];            // Buffer to read user input
 
 #ifdef _WIN32
     system("cls");
@@ -357,6 +354,16 @@ int main() {
     printf("Enter your choice: ");
     scanf("%d", &choice);
 
+    if (scanf("%d", &choice) != 1) {
+        // Input bukan angka, tampilkan pesan error
+        printf("Invalid choice! Please enter a number.\n");
+
+        // Bersihkan buffer input
+        while (getchar() != '\n');
+
+        // Lanjutkan loop tanpa menjalankan switch
+        continue;
+    }
 
         switch (choice) {
             case 1: {
@@ -478,7 +485,7 @@ int main() {
             }
 
             }case 10:{
-                printf("Exiting...\n");
+                printf("Exiting program. Goodbye!\n");
                 free_playlists(playlists);
                 break;
             }
