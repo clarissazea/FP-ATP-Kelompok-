@@ -59,8 +59,11 @@ void free_playlists(Playlist* head);
 void printWelcomeMessage();
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 21464d7dfa717e7834079ac8f6a6a21e3b3fe853
 // Fungsi tambahan
 Song* create_song(const char* singer, const char* title, const char* album, int duration) {
     Song* new_song = (Song*)malloc(sizeof(Song));
@@ -149,7 +152,11 @@ void sort_playlist(Playlist* playlist, int by_singer) {
     }
 }
 
+<<<<<<< HEAD
 void display_all_playlists(Playlist* head)
+=======
+void display_all_playlists(Playlist* head) {
+>>>>>>> 21464d7dfa717e7834079ac8f6a6a21e3b3fe853
     if (!head) {
         printf("No playlists available.\n");
         return;
@@ -223,6 +230,10 @@ Playlist* add_playlist(Playlist* head, const char* name) {
     printf("Playlist '%s' created.\n", name);
     return new_playlist;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 21464d7dfa717e7834079ac8f6a6a21e3b3fe853
 // Function to import a playlist from a CSV file
 Playlist* importPlaylistFromFile(Playlist* head,const char* filename) {
     FILE* file = fopen(filename, "r");
@@ -308,9 +319,12 @@ void savePlaylistToFile(Playlist* head, const char* playlistName) {
     printf("Playlist '%s' saved to %s\n", playlist->name, filename);
 }
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> 21464d7dfa717e7834079ac8f6a6a21e3b3fe853
 void free_songs(Song* head) {
     while (head) {
         Song* temp = head;
@@ -328,10 +342,14 @@ void free_playlists(Playlist* head) {
     }
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 21464d7dfa717e7834079ac8f6a6a21e3b3fe853
 int main() {
-    Playlist* playlists = NULL;
     int choice;
+    Playlist *playlists = NULL; // Dummy pointer for demonstration
+    char input[10];            // Buffer to read user input
 
 #ifdef _WIN32
     system("cls");
@@ -358,8 +376,21 @@ int main() {
     printf("Enter your choice: ");
     scanf("%d", &choice);
 
+<<<<<<< HEAD
 // } while (choice != 10);
 
+=======
+    if (scanf("%d", &choice) != 1) {
+        // Input bukan angka, tampilkan pesan error
+        printf("Invalid choice! Please enter a number.\n");
+
+        // Bersihkan buffer input
+        while (getchar() != '\n');
+
+        // Lanjutkan loop tanpa menjalankan switch
+        continue;
+    }
+>>>>>>> 21464d7dfa717e7834079ac8f6a6a21e3b3fe853
 
         switch (choice) {
             case 1: {
@@ -367,7 +398,6 @@ int main() {
                 printf("Enter playlist name: ");
                 scanf(" %99[^\n]", playlist_name);
                 playlists = add_playlist(playlists, playlist_name);
-                printf("Playlist '%s' created.\n", playlist_name);
                 break;
             }
             case 2: {
@@ -436,9 +466,20 @@ int main() {
                 }
                 break;
             }
+<<<<<<< HEAD
             case 6:
                 display_playlist(playlists);
                 break;
+=======
+            case 6: {
+            if (playlists == NULL) {
+            printf("No playlists exist.\n");
+            } else {
+            display_all_playlists(playlists);
+            }
+            break;
+            }
+>>>>>>> 21464d7dfa717e7834079ac8f6a6a21e3b3fe853
             case 7: {
                 char playlist_name[100], title[100];
                 printf("Enter playlist name: ");
@@ -477,7 +518,11 @@ int main() {
             }
 
             }case 10:{
+<<<<<<< HEAD
                 printf("Exiting...\n");
+=======
+                printf("Exiting program. Goodbye!\n");
+>>>>>>> 21464d7dfa717e7834079ac8f6a6a21e3b3fe853
                 free_playlists(playlists);
                 break;
             }
