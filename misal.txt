@@ -1,3 +1,0 @@
-ini penyanyi, ini judul, ini album, 19
-ini penyanyi2, ini judul2, ini album2, 20
-ini penyanyi3, ini judul3, ini album3, 21
